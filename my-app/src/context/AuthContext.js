@@ -1,4 +1,4 @@
-import { createContext,useState,useEffect } from 'react';
+import { createContext,useState,useEffect,useCallback } from 'react';
 import Cookies from 'js-cookie';
 import { TokenExpiredError } from 'jsonwebtoken';
 
@@ -6,7 +6,7 @@ import { TokenExpiredError } from 'jsonwebtoken';
 export const store = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(undefined);
   const[error,setError] = useState(false);
   const[user,setUser] = useState(null)
   
@@ -78,20 +78,29 @@ const home = async() => {
   }
 }
 
-const logout = () => {
-  setToken(null);
-  Cookies.remove('token');  
-  setUser(null) 
-};
+// useEffect(() => {
+//   const tokenFromCookie = Cookies.get('token');
+//   if (tokenFromCookie) {
+//     setToken(tokenFromCookie);
+//     home()
+//   }
+// }, []);
+
 
 useEffect(() => {
   if (token) {
     Cookies.set('token', token, { expires: 30 });
-    
   } else {
+    console.log("remove")
     Cookies.remove('token');
   }
 }, []);
+
+const logout = () => {
+  setToken(undefined);
+  Cookies.remove('token');  
+  setUser(null) 
+};
 
   return (
     <store.Provider value={{ token,setToken, login, logout, register,error,home,user }}>

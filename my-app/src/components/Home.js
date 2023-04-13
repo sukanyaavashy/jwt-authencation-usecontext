@@ -1,33 +1,24 @@
 import React, { useContext,useEffect } from 'react';
 import { store } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import '../App.css'
+import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const Home = () => {
-  const {  token,logout,user,home,error} = useContext(store);
+  const {  token,logout,user,home} = useContext(store);
   const navigate = useNavigate()
-  
-  const tokenCookie = Cookies.get('token');
- 
+
   useEffect(() => {
-    if (token || tokenCookie) {
-      home();
-    } else {
-      navigate('/login');
+    console.log("cdvfv")
+    if (token) {
+      home()
     }
   }, []);
-
-
+  
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
-
-  // if (error) {
-  //   return <div>Error fetching user data. Please try again later.</div>;
-  // }
-
 
   return (
     <div className="home-container">

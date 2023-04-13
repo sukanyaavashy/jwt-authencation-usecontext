@@ -1,15 +1,20 @@
 const Registeruser = require('../model')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt');
 
 exports.post = async (req,res) => {
+    const {email,password} = req.body
     try {
-        const {email,password} = req.body
         let exist = await Registeruser.findOne({email})
         if(!exist){
-            return res.status(400).json({error:'User Not found'})
+            return res.status(400).json({message:'User Not found'})
         }
-        if(exist.password !== password){
-            return res.status(400).json({error:'Authentication failed'})
+
+        // Compare the entered password with the hashed password using bcrypt
+        const passwordMatch = await bcrypt.compare(password, exist.password);
+
+        if(!passwordMatch){
+            return res.status(400).json({message:'Authentication failed'})
         }
         let payload = {
             user:{

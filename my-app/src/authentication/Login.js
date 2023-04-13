@@ -5,21 +5,26 @@ import { useNavigate,Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const Login = () => {
-  const {login, error} = useContext(store)
+  const {login, error,token} = useContext(store)
   const[email,setEmail] = useState('')
   const[password,setPassword] = useState('')
   const navigate = useNavigate()
-  const tokenCookie = Cookies.get('token');
+  // const tokenCookie = Cookies.get('token');
 
   const handleSubmit = async(e) => {
     e.preventDefault()
     await login({email,password})
-    if(tokenCookie !== undefined ){
+    if(token !== undefined ){
+      console.log("home")
       navigate('/')
     }
-
   }
 
+  
+
+
+
+{/* <Navigate replace to="/login" /> */}
   return (
     <div className='container'>
       <form onSubmit={handleSubmit}>
